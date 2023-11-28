@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Person</title>
+</head>
+<body>
+<p th:text="${person.getFio()}+', '+ ${person.getBirthYear()}+', '+${person.getEmail()}">VALUE</p>
+
+<div th:if="${books.isEmpty()}">
+    <p>The man has not yet taken a single book</p>
+    <hr/>
+</div>
+
+<div th:if="${!books.isEmpty()}">
+    <hr/>
+    <b> Books: </b>
+    <div th:each="book : ${books}">
+        <div th:style="${book.isExpired()} ? 'color: red' : 'color: black'"
+             th:text="${book.getName() + ', '+ book.getAuthor()+', '+ book.getYear()}">val
+        </div>
+    </div>
+    <br>
+</div>
+
+<form th:action="@{/people/{id}/edit(id=${person.getId()})}">
+    <input type="submit" value="Edit" style="margin: 0 0 5px 0;"/>
+</form>
+<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+    <input type="submit" value="Delete" style="margin: 5px 0 0 0;"
+           th:data-confirm-delete="|Do you really want to delete the person: ${person.getFio()}?|"
+           onclick="if (!confirm(this.getAttribute('data-confirm-delete'))) return false"/>
+</form>
+</body>
+</html>

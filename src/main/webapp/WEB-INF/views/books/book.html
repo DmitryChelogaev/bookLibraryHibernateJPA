@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book</title>
+</head>
+<body>
+<p th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}">VALUE</p>
+
+<div th:if="${people}">
+    <p>This book is free. Who will be owner?</p>
+    <form th:method="PATCH" th:action="@{/books/{id}/assign(id=${book.getId()})}">
+        <label for="person">Select person</label>
+        <select th:object="${person}" th:field="*{id}" id="person">
+            <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getFio()}">
+            </option>
+        </select>
+        <input type="submit" value="Assign" style="margin: 5px 0 0 0;"/>
+    </form>
+</div>
+
+<div th:if="${owner}">
+    <p th:text="'Book owner is: '+ ${owner.getFio()}">owner name</p>
+    <form th:method="PATCH" th:action="@{/books/{id}/release(id=${book.getId()})}">
+        <input type="submit" value="Release book" style="margin: 5px 0 0 0;"
+               th:data-confirm-release="|Do you really want to free the book: ${book.getName()}?|"
+               onclick="if (!confirm(this.getAttribute('data-confirm-release'))) return false"/>
+    </form>
+</div>
+<hr/>
+<form th:method="GET" th:action="@{/books/{id}/edit(id=${book.getId()})}">
+    <input type="submit" value="Edit" style="margin: 0 0 5px 0;"/>
+</form>
+<form th:method="DELETE" th:action="@{/books/{id}(id=${book.getId()})}">
+    <input type="submit" value="Delete" style="margin: 5px 0 0 0;"
+           th:data-confirm-delete="|Вы действительно хотите удалить книгу ${book.getName()}?|"
+           onclick="if (!confirm(this.getAttribute('data-confirm-delete'))) return false"/>
+</form>
+</body>
+</html>
